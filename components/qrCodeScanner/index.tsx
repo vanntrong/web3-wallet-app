@@ -43,14 +43,11 @@ const QrCodeScanner = ({ isVisible, onClose, onBarcodeScanned }: Props) => {
 
         const dataNeeded = scannedResults[0];
         onBarcodeScanned(dataNeeded);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     }
   };
 
   const handleBarCodeScanned = (data: BarcodeScanningResult) => {
-    console.log("scanned", data);
     setScanned(true);
     onBarcodeScanned(data);
   };

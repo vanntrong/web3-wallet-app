@@ -9,7 +9,6 @@ const SelectToAddress = () => {
   const { token } = useLocalSearchParams();
   const { setSelectToken } = useSendTokenContext();
   const { getTokenById } = useTokenStore();
-  console.log({ token });
 
   useEffect(() => {
     const _token = getTokenById(token as string);

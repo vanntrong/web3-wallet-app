@@ -23,7 +23,6 @@ export const useGetMyToken = (
   return useQuery({
     queryKey,
     queryFn: () => {
-      console.log("useGetMyToken", { networkId });
       return axiosInstance.get<TGetMyTokenResponse>(userEndpoint.getMyTokens, {
         params: {
           networkId,

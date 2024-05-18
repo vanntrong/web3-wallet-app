@@ -38,7 +38,6 @@ export const useGetTransactions = (
       ),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      console.log("lastPage", lastPage.data.pagination);
       if (lastPage.data.pagination?.hasNext) {
         return (
           Number(lastPage.data.pagination?.offset) +

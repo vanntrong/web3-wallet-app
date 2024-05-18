@@ -7,7 +7,7 @@ interface TokenStore {
   otherTokens: TToken[];
   isLoading: boolean;
 
-  setMainToken: (token: TMainToken) => void;
+  setMainToken: (token?: TMainToken) => void;
   setOtherTokens: (tokens: TToken[]) => void;
   getTokenById: (id: string) => TToken | undefined;
   setIsLoading: (isLoading: boolean) => void;

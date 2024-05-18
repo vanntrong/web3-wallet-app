@@ -4,7 +4,7 @@ const DecimalRounding = Decimal.clone({
   rounding: Decimal.ROUND_FLOOR,
 });
 
-export const formatNumber = (number?: number, fractionDigits = 5) => {
+export const formatNumber = (number?: number | string, fractionDigits = 5) => {
   if (!number) return "0";
   const _number = new DecimalRounding(number);
 

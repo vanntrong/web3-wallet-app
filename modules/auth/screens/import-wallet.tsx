@@ -26,6 +26,7 @@ import { localStoreKey } from "@/configs/localStore";
 import useBiometric from "@/hooks/useBiometric";
 import { useAuthStore } from "@/stores/globalStore";
 import { setLocalStore } from "@/stores/localStore";
+import { resetRouter } from "@/utils/router";
 
 const inputs: {
   name: "mnemonic" | "password" | "confirmPassword";
@@ -58,7 +59,11 @@ const ImportWallet = () => {
 
   useEffect(() => {
     if (user) {
-      router.push("/wallet/");
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: "/wallet/" }] as any,
+      // });
+      resetRouter(router, "/wallet/");
     }
   }, [user, router]);
 
@@ -91,7 +96,6 @@ const ImportWallet = () => {
 
   const handleBarcodeScanned = (result: BarcodeScanningResult) => {
     const mnemonic = result.data;
-    console.log({ mnemonic });
     if (mnemonic) {
       setValue("mnemonic", mnemonic);
       clearErrors("mnemonic");
@@ -116,8 +120,6 @@ const ImportWallet = () => {
         `Authenticate with ${biometryType}`
       );
     }
-
-    console.log({ biometricPublicKey });
 
     mutate({
       ...data,

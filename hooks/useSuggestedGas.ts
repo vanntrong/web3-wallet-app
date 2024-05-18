@@ -37,7 +37,6 @@ const useSuggestedGas = (networkId?: string) => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      console.log("refetching...", Date.now());
       refetch();
     }, 15000);
 

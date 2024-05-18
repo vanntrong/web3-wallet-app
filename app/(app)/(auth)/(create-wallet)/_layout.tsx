@@ -5,7 +5,6 @@ import { COLORS } from "@/configs/colors";
 import { CreateWalletProvider } from "@/contexts/CreateWalletContext";
 
 export default function Layout() {
-  console.log("asmdoasmodmas");
   return (
     <CreateWalletProvider>
       <Stack

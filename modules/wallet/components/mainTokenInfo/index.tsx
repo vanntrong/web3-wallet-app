@@ -24,8 +24,6 @@ const MainTokenInfo = ({ token }: Props) => {
   const balance = useMemo(() => {
     if (tokenInUsed && tokenInUsed.balance) {
       const price = prices[tokenInUsed.priceFeedId || ""];
-      console.log("price", price);
-      console.log("balance", tokenInUsed.balance);
       return calculateBalance(tokenInUsed.balance, price);
     }
   }, []);

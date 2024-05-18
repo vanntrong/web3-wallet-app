@@ -66,7 +66,7 @@ const SwapInput = ({
           style={styles.inputField}
           inputMode="decimal"
           readonly={readonly}
-          value={formatNumber(Number(value)).toString()}
+          value={value}
           onChangeText={onValueChange}
           returnKeyType="done"
         />

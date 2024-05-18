@@ -11,7 +11,6 @@ const Screen = () => {
   // if (!user && !accessToken) return <Redirect href="/(auth)/wallet-setup" />;
   // if (accessToken) return <Redirect href="/login" />;
   if (!user && !accessToken) {
-    console.log("!user && !accessToken");
     router.replace("/wallet-setup");
     return null;
   }

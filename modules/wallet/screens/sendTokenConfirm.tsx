@@ -62,10 +62,6 @@ const SendTokenConfirmScreen = () => {
     suggestedGasResponse,
   } = useSuggestedGas(currentNetwork?.id);
 
-  useEffect(() => {
-    console.log({ suggestedGas });
-  }, [suggestedGas]);
-
   const {
     data: { data } = {},
     isFetching,

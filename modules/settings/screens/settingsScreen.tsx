@@ -8,6 +8,7 @@ import Row from "../components/row";
 
 import Button from "@/components/button";
 import { COLORS } from "@/configs/colors";
+import useLogout from "@/modules/auth/services/useLogout";
 
 const CustomSwitch = ({ value, onValueChange }: SwitchProps) => {
   return (
@@ -21,6 +22,8 @@ const CustomSwitch = ({ value, onValueChange }: SwitchProps) => {
 };
 
 export default function SettingsScreen() {
+  const { logout } = useLogout();
+
   const [form, setForm] = useState({
     emailNotifications: true,
     pushNotifications: false,
@@ -93,7 +96,7 @@ export default function SettingsScreen() {
           {/* Logout section */}
           <View style={styles.section}>
             <Button
-              onPress={() => {}}
+              onPress={logout}
               style={styles.sectionBody}
               textStyle={styles.rowLabelLogout}
             >

@@ -43,11 +43,15 @@ const LoginScreen = () => {
 
   const { mutate, isPending } = useLogin({
     onSuccess(data, variables, context) {
+      console.log("access_token", data.data);
       const {
         tokens: { access_token },
       } = data.data.data;
       setAccessToken(access_token);
       setLocalStore(localStoreKey.ACCESS_TOKEN, access_token);
+    },
+    onError(error, variables, context) {
+      console.log(error);
     },
   });
   const { mutate: loginBiometric, isPending: isPendingBiometric } =
@@ -58,6 +62,9 @@ const LoginScreen = () => {
         } = data.data.data;
         setAccessToken(access_token);
         setLocalStore(localStoreKey.ACCESS_TOKEN, access_token);
+      },
+      onError(error, variables, context) {
+        console.log(error);
       },
     });
 
@@ -99,7 +106,6 @@ const LoginScreen = () => {
       return;
     }
     const privateKey = await getLocalStore(localStoreKey.PRIVATE_KEY);
-    console.log({ privateKey });
     if (!userId || !privateKey) {
       showToast({
         title: `Please login before can use ${biometryType}`,
@@ -129,7 +135,6 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (user) {
-      console.log("user", user);
       router.push("/wallet/");
     }
   }, [user, router]);
@@ -239,3 +244,5 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
+// {ExponentPushToken[GJrnKMHXQjzILOvXKZdzzF],ExponentPushToken[o-6ezzA944yEeCTKahK97c]}

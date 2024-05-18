@@ -212,9 +212,9 @@ const SwapScreen = () => {
               }
               selectedToken={swapData.from}
               value={swapData.amountIn}
-              onValueChange={(value) =>
-                setSwapData({ ...swapData, amountIn: value.replace(",", ".") })
-              }
+              onValueChange={(value) => {
+                setSwapData({ ...swapData, amountIn: value.replace(",", ".") });
+              }}
             />
             <SwapInput
               label="To"

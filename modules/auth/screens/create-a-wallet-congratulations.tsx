@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Image, Text, View } from "react-native-ui-lib";
@@ -9,8 +9,13 @@ import ArrowLeftBack from "@/assets/icons/arrow-left-back.svg";
 import Button from "@/components/button";
 import { COLORS } from "@/configs/colors";
 import AuthLayout from "@/layouts/AuthLayout";
-
+import { resetRouter } from "@/utils/router";
 const CreateAWalletCongratulationScreen = () => {
+  const router = useRouter();
+
+  const navigateToHome = () => {
+    resetRouter(router, "/wallet/");
+  };
   return (
     <AuthLayout>
       <View style={styles.container}>
@@ -32,9 +37,9 @@ const CreateAWalletCongratulationScreen = () => {
             </Text>
           </View>
           <View style={styles.buttonWrapper}>
-            <Link href="/wallet/" asChild>
-              <Button>Continue</Button>
-            </Link>
+            {/* <Link href="/wallet/" asChild> */}
+            <Button onPress={navigateToHome}>Continue</Button>
+            {/* </Link> */}
           </View>
         </View>
       </View>

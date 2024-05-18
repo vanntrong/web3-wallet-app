@@ -56,9 +56,7 @@ const AssetPickerBottomSheetModal = (props: Props) => {
           type: result.assets[0].mimeType ?? `image/${fileExtension}`,
         };
         onTakeImage(data);
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     }
   };
 

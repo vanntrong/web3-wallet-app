@@ -1,7 +1,6 @@
 import { Tabs } from "expo-router/tabs";
 import React from "react";
-import { ToastAndroid } from "react-native";
-import { Text, TouchableOpacity, View } from "react-native-ui-lib";
+import { Text, View } from "react-native-ui-lib";
 
 import { COLORS } from "@/configs/colors";
 import { privateTabs } from "@/configs/privateTabs";

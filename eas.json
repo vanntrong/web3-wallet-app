@@ -7,14 +7,19 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://localhost:8080",
-        "EXPO_PUBLIC_SOCKET_URL": "http://localhost:8080"
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.13:8080",
+        "EXPO_PUBLIC_SOCKET_URL": "http://192.168.1.13:8080"
       }
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://web3-wallet-api.vovantrong.xyz",
+        "EXPO_PUBLIC_SOCKET_URL": "https://web3-wallet-api.vovantrong.xyz"
+      }
+    }
   },
   "submit": {
     "production": {}

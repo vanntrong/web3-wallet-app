@@ -1,8 +1,7 @@
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
-import React, { useEffect, useRef } from "react";
-import io from "socket.io-client";
+import React, { useCallback, useEffect, useRef } from "react";
+import { AppState } from "react-native";
 
-import { SOCKET_URL } from "@/configs/appConfig";
 import { localStoreKey } from "@/configs/localStore";
 import { useGetMe } from "@/modules/user/services/useGetMe";
 import { useGetMyToken } from "@/modules/user/services/useGetMyToken";
@@ -76,38 +75,52 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   // const timer = setInterval(() => {
-  //   const connection = connectionRef.current;
-  //   const priceIds = otherTokens
-  //     .map((token) => token.priceFeedId)
-  //     .filter((priceId) => priceId !== null);
+  const fetchPrices = useCallback(() => {
+    // const timer = setInterval(() => {
+    const connection = connectionRef.current;
+    const priceIds = otherTokens
+      .map((token) => token.priceFeedId)
+      .filter((priceId) => priceId !== null);
 
-  //   if (priceIds.length === 0) return;
+    if (priceIds.length === 0) return;
 
-  //   connection.subscribePriceFeedUpdates(priceIds as string[], (priceFeed) => {
-  //     const price = convertPriceFromPythNetwork(
-  //       priceFeed.getPriceUnchecked()?.price
-  //     );
-  //     const priceFeedId = priceFeed.id;
-  //     if (price && priceFeedId) {
-  //       setPrice(`0x${priceFeedId}`, price);
-  //     } else {
-  //       console.log("cannot get price for id: ", priceFeed.id, price);
-  //     }
-  //   });
+    connection.subscribePriceFeedUpdates(priceIds as string[], (priceFeed) => {
+      const price = convertPriceFromPythNetwork(
+        priceFeed.getPriceUnchecked()?.price
+      );
+      const priceFeedId = priceFeed.id;
+      if (price && priceFeedId) {
+        setPrice(`0x${priceFeedId}`, price);
+      } else {
+        console.log("cannot get price for id: ", priceFeed.id, price);
+      }
+    });
 
-  //   // When using the subscription, make sure to close the websocket upon termination to finish the process gracefully.
-  //   // const timer = setTimeout(() => {
-  //   //   connection.closeWebSocket();
-  //   //   clearTimeout(timer);
-  //   // }, 3000);
-  //   // }, 3500);
+    // When using the subscription, make sure to close the websocket upon termination to finish the process gracefully.
+    // const timer = setTimeout(() => {
+    //   connection.closeWebSocket();
+    //   clearTimeout(timer);
+    // }, 3000);
+    // }, 3500);
 
-  //   // return () => {
-  //   //   clearInterval(timer);
-  //   // };
-  // }, [otherTokens, setPrice]);
+    // return () => {
+    //   clearInterval(timer);
+    // };
+  }, [otherTokens, setPrice]);
+
+  useEffect(() => {
+    fetchPrices();
+  }, [fetchPrices]);
+
+  useEffect(() => {
+    AppState.addEventListener("change", (state) => {
+      if (state === "active") {
+        fetchPrices();
+      } else {
+        connectionRef.current?.closeWebSocket();
+      }
+    });
+  }, [fetchPrices]);
 
   return children;
 };

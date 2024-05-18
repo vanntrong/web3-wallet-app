@@ -69,23 +69,24 @@ const ProfileScreen = () => {
       <View style={{ marginTop: 32, paddingHorizontal: 16 }}>
         <Text style={styles.sectionTitle}>PERSONAL INFORMATION</Text>
         <View style={styles.sectionBody}>
-          <Row
+          {/* <Row
             label="Username"
             value="@johndoe"
             onPress={() => router.push("/settings/update-username")}
-          />
+          /> */}
           <Row
             label="Name"
             value={user.name}
             onPress={() => router.push("/settings/update-name")}
+            isLastRow
           />
-          <Row label="Phone" value="(123) 456-7890" onPress={() => {}} />
-          <Row
+          {/* <Row label="Phone" value="(123) 456-7890" onPress={() => {}} /> */}
+          {/* <Row
             label="Country"
             value="United States"
             onPress={() => {}}
             isLastRow
-          />
+          /> */}
         </View>
       </View>
 
