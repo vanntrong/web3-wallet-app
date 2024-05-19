@@ -11,6 +11,7 @@ interface SocketStore {
 export const useSocketStore = create<SocketStore>((set) => ({
   socket: null,
   connectSocket: (accessToken: string) => {
+    if (!SOCKET_URL) return;
     const socket = io(SOCKET_URL, {
       extraHeaders: {
         Authorization: `Bearer ${accessToken}`,

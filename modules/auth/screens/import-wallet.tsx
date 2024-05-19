@@ -24,7 +24,8 @@ import QrCodeScanner from "@/components/qrCodeScanner";
 import { COLORS } from "@/configs/colors";
 import { localStoreKey } from "@/configs/localStore";
 import useBiometric from "@/hooks/useBiometric";
-import { useAuthStore } from "@/stores/globalStore";
+import { useGetMe } from "@/modules/user/services/useGetMe";
+import { useAuthStore, useNetworkStore } from "@/stores/globalStore";
 import { setLocalStore } from "@/stores/localStore";
 import { resetRouter } from "@/utils/router";
 
@@ -48,24 +49,20 @@ const inputs: {
 
 const ImportWallet = () => {
   const router = useRouter();
-  const { user, setAccessToken } = useAuthStore();
+  const [isEnabledGetMe, setIsEnabledGetMe] = useState(false);
+  const { setNetworks, setCurrentNetwork } = useNetworkStore();
+  const { user, setAccessToken, setUser, accessToken } = useAuthStore();
+  const { data: getMeResponse } = useGetMe(accessToken, {
+    enabled: !user && !!accessToken && isEnabledGetMe,
+  });
   const { mutate, isPending } = useImportWallet({
     async onSuccess(data, variables, context) {
       const { access_token } = data.data.data;
       await setLocalStore(localStoreKey.ACCESS_TOKEN, access_token);
       setAccessToken(access_token);
+      setIsEnabledGetMe(true);
     },
   });
-
-  useEffect(() => {
-    if (user) {
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{ name: "/wallet/" }] as any,
-      // });
-      resetRouter(router, "/wallet/");
-    }
-  }, [user, router]);
 
   const {
     control,
@@ -126,6 +123,24 @@ const ImportWallet = () => {
       biometricPublicKey,
     });
   };
+
+  useEffect(() => {
+    if (user) {
+      resetRouter(router, "/wallet/");
+    }
+  }, [user, router]);
+
+  useEffect(() => {
+    if (!getMeResponse?.data?.data || !isEnabledGetMe) return;
+    const data = getMeResponse.data.data;
+    setUser({
+      ...data,
+      name: data.name ?? "Anonymous",
+    });
+    setNetworks(data.networks);
+    setCurrentNetwork(data.networks[0] ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getMeResponse, isEnabledGetMe]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

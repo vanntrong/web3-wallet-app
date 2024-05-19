@@ -1,10 +1,9 @@
-import { MaterialCommunityIcons, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as LocalAuthentication from "expo-local-authentication";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { ImageBackground, StyleSheet } from "react-native";
+import { Alert, ImageBackground, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, View } from "react-native-ui-lib";
 
@@ -20,12 +19,15 @@ import Input from "@/components/input";
 import { COLORS } from "@/configs/colors";
 import { localStoreKey } from "@/configs/localStore";
 import useBiometric from "@/hooks/useBiometric";
-import { useAuthStore } from "@/stores/globalStore";
+import { useGetMe } from "@/modules/user/services/useGetMe";
+import { useAuthStore, useNetworkStore } from "@/stores/globalStore";
 import { getLocalStore, setLocalStore } from "@/stores/localStore";
 import { showToast } from "@/utils/toast";
 
 const LoginScreen = () => {
   const router = useRouter();
+  const { setNetworks, setCurrentNetwork } = useNetworkStore();
+  const [isEnabledGetMe, setIsEnabledGetMe] = useState(false);
   const {
     control,
     handleSubmit,
@@ -37,11 +39,19 @@ const LoginScreen = () => {
       password: "",
     },
   });
-  const { user, setAccessToken } = useAuthStore();
-  const { createSignature, biometryType, requestAuthentication } =
-    useBiometric();
+  const { user, setAccessToken, setUser, accessToken } = useAuthStore();
+  const {
+    createSignature,
+    biometryType,
+    requestAuthentication,
+    generatePublickey,
+  } = useBiometric();
 
-  const { mutate, isPending } = useLogin({
+  const { data: getMeResponse } = useGetMe(accessToken, {
+    enabled: !user && !!accessToken && isEnabledGetMe,
+  });
+
+  const { mutate: login, isPending } = useLogin({
     onSuccess(data, variables, context) {
       console.log("access_token", data.data);
       const {
@@ -49,9 +59,10 @@ const LoginScreen = () => {
       } = data.data.data;
       setAccessToken(access_token);
       setLocalStore(localStoreKey.ACCESS_TOKEN, access_token);
+      setIsEnabledGetMe(true);
     },
     onError(error, variables, context) {
-      console.log(error);
+      console.log(error.response);
     },
   });
   const { mutate: loginBiometric, isPending: isPendingBiometric } =
@@ -62,9 +73,7 @@ const LoginScreen = () => {
         } = data.data.data;
         setAccessToken(access_token);
         setLocalStore(localStoreKey.ACCESS_TOKEN, access_token);
-      },
-      onError(error, variables, context) {
-        console.log(error);
+        setIsEnabledGetMe(true);
       },
     });
 
@@ -86,10 +95,39 @@ const LoginScreen = () => {
       });
       return;
     }
-    mutate({
-      password: data.password,
-      address,
-    });
+    let biometricPublicKey: string | undefined = undefined;
+    const privateKey = await getLocalStore(localStoreKey.PRIVATE_KEY);
+    if (!privateKey) {
+      Alert.alert("Enable biometric login?", "", [
+        {
+          text: "Cancel",
+          onPress: () => {
+            login({
+              password: data.password,
+              address,
+            });
+          },
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            biometricPublicKey = await generatePublickey(true);
+            login({
+              password: data.password,
+              address,
+              biometricPublicKey,
+            });
+          },
+          style: "default",
+        },
+      ]);
+    } else {
+      login({
+        password: data.password,
+        address,
+      });
+    }
   };
 
   const handleLoginBiometric = async () => {
@@ -138,6 +176,18 @@ const LoginScreen = () => {
       router.push("/wallet/");
     }
   }, [user, router]);
+
+  useEffect(() => {
+    if (!getMeResponse?.data?.data || !isEnabledGetMe) return;
+    const data = getMeResponse.data.data;
+    setUser({
+      ...data,
+      name: data.name ?? "Anonymous",
+    });
+    setNetworks(data.networks);
+    setCurrentNetwork(data.networks[0] ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getMeResponse, isEnabledGetMe]);
 
   return (
     <ImageBackground

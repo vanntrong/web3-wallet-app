@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { AppState } from "react-native";
 
 import { localStoreKey } from "@/configs/localStore";
-import { useGetMe } from "@/modules/user/services/useGetMe";
 import { useGetMyToken } from "@/modules/user/services/useGetMyToken";
 import {
   useAuthStore,
@@ -16,10 +15,10 @@ import { axiosInstance } from "@/utils/axios";
 import { convertPriceFromPythNetwork } from "@/utils/converter";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const { currentNetwork, setNetworks, setCurrentNetwork } = useNetworkStore();
+  const { currentNetwork } = useNetworkStore();
   const { setMainToken, setOtherTokens, otherTokens, setIsLoading } =
     useTokenStore();
-  const { setUser, user, accessToken } = useAuthStore();
+  const { user, accessToken } = useAuthStore();
   const { setPrice } = usePriceStore();
   const { data: getMyTokenResponse, isFetching } = useGetMyToken(
     currentNetwork?.id,
@@ -27,9 +26,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       enabled: !!currentNetwork,
     }
   );
-  const { data: getMeResponse } = useGetMe(accessToken, {
-    enabled: !user && !!accessToken,
-  });
 
   const connectionRef = useRef(
     new PriceServiceConnection("https://hermes.pyth.network")
@@ -54,18 +50,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken, user]);
-
-  useEffect(() => {
-    if (!getMeResponse?.data?.data) return;
-    const data = getMeResponse.data.data;
-    setUser({
-      ...data,
-      name: data.name ?? "Anonymous",
-    });
-    setNetworks(data.networks);
-    setCurrentNetwork(data.networks[0] ?? null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getMeResponse]);
 
   useEffect(() => {
     if (user) {

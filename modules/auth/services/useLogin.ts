@@ -15,7 +15,7 @@ const useLogin = (
   options?: UseMutationOptions<
     AxiosResponse<Response<TLoginResponse>>,
     AxiosError,
-    TLoginSchema & { address: string }
+    TLoginSchema & { address: string; biometricPublicKey?: string }
   >
 ) => {
   return useMutation({

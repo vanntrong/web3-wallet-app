@@ -1,5 +1,4 @@
 import * as LocalAuthentication from "expo-local-authentication";
-import * as SecureStore from "expo-secure-store";
 import React, { useCallback, useEffect } from "react";
 import { RSA } from "react-native-rsa-native";
 

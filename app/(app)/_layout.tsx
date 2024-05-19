@@ -67,26 +67,26 @@ export default function Layout() {
         }
         axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
         setAccessToken(accessToken);
-        const response = await axiosInstance.get<Response<TUser>>(
-          userEndpoint.getMe
-        );
+        // const response = await axiosInstance.get<Response<TUser>>(
+        //   userEndpoint.getMe
+        // );
 
-        if (!response.data) {
-          // have access token but no user -> user access token is invalid
-          // -> redirect to login page
-          setAuthIsReady(true);
-          return;
-        }
-        const user = response.data.data;
+        // if (!response.data) {
+        //   // have access token but no user -> user access token is invalid
+        //   // -> redirect to login page
+        //   setAuthIsReady(true);
+        //   return;
+        // }
+        // const user = response.data.data;
 
-        setUser({
-          ...user,
-          name: user.name ?? "Anonymous",
-        });
-        setNetworks(user.networks);
-        setCurrentNetwork(
-          user.currentSelectedNetwork ?? user.networks[0] ?? null
-        );
+        // setUser({
+        //   ...user,
+        //   name: user.name ?? "Anonymous",
+        // });
+        // setNetworks(user.networks);
+        // setCurrentNetwork(
+        //   user.currentSelectedNetwork ?? user.networks[0] ?? null
+        // );
 
         await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (e) {

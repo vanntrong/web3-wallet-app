@@ -14,6 +14,7 @@ const Screen = () => {
     router.replace("/wallet-setup");
     return null;
   }
+  console.log({ user });
   if (!user && accessToken) {
     router.replace("/login");
     return;
