@@ -21,9 +21,10 @@ export const showToast = ({
     type,
     text1: title,
     text2: description,
-    // autoHide: true,
-    // visibilityTime: 2000,
-    position: "bottom",
+    autoHide: true,
+    visibilityTime: 2000,
+    position: "top",
+    topOffset: 100,
     ...options,
   });
 };

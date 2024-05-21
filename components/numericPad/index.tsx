@@ -14,6 +14,8 @@ import {
 import { numericPads } from "./config";
 import { NumericPadRef } from "./type";
 
+import { validateInputNumber } from "@/utils/validator";
+
 interface ButtonItemProps extends TouchableOpacityProps {
   buttonSize?: number;
   text?: string;
@@ -108,35 +110,13 @@ const NumericPad = React.forwardRef<NumericPadRef, NumericPadProps>(
   ) => {
     const [input, setInput] = useState("");
 
-    // useEffect(() => {
-    //   if (!ref || !ref.current) return;
-    //   ref.current = {
-    //     clear: () => {
-    //       if (input.length > 0) {
-    //         setInput(input.slice(0, -1));
-    //       }
-    //     },
-    //     clearAll: () => {
-    //       if (input.length > 0) {
-    //         setInput("");
-    //       }
-    //     },
-    //   };
-    // }, [input, ref]);
-
     const onButtonPressHandle = (key: string, value: string) => {
       // only 1 dot
-      if (
-        (key === "dot" && input.length < 1) ||
-        (key === "dot" && input.includes("."))
-      )
-        return;
-      if (
-        input.includes(".") &&
-        input.substring(input.indexOf(".")).length === maxDecimalFraction
-      )
-        return;
-      if (!numLength || input.length < numLength) {
+      const isValid = validateInputNumber(key, value, {
+        maxDecimalFraction,
+        maxNumLength: numLength,
+      });
+      if (isValid) {
         setInput(input + "" + value);
       }
     };

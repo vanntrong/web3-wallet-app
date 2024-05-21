@@ -63,6 +63,11 @@ const SwapScreen = () => {
     from: mainToken,
   });
 
+  const amountInNumber = useMemo(
+    () => Number(swapData.amountIn?.replace(",", ".")),
+    [swapData.amountIn]
+  );
+
   const {
     isGetSuggestedGasFetching,
     isShowGasFeeSelector,
@@ -79,12 +84,13 @@ const SwapScreen = () => {
     {
       tokenIn: swapData.from?.contractAddress,
       tokenOut: swapData.to?.contractAddress,
-      amount: Number(swapData.amountIn),
+      amount: amountInNumber,
       networkId: currentNetwork?.id ?? "",
     },
     {
       enabled:
-        !!swapData.amountIn &&
+        !!amountInNumber &&
+        !Number.isNaN(amountInNumber) &&
         !!currentNetwork &&
         (!!swapData.to?.contractAddress || !!swapData.from?.contractAddress),
     }
@@ -93,7 +99,7 @@ const SwapScreen = () => {
   const { data: { data } = {}, isFetching } = useSwapEstimateGas(
     {
       networkId: currentNetwork?.id ?? "",
-      amount: Number(swapData.amountIn),
+      amount: amountInNumber,
       tokenIn: swapData.from?.contractAddress,
       tokenOut: swapData.to?.contractAddress ?? "",
       ...suggestedGas,
@@ -101,7 +107,8 @@ const SwapScreen = () => {
     {
       enabled:
         !!currentNetwork &&
-        !!swapData.amountIn &&
+        !!amountInNumber &&
+        !Number.isNaN(amountInNumber) &&
         !!swapData.to &&
         !isGetSuggestedGasFetching,
     }
@@ -125,12 +132,7 @@ const SwapScreen = () => {
   };
 
   const isEnableSwapButton = useMemo(() => {
-    return (
-      swapData.to &&
-      swapData.amountIn &&
-      Number(swapData.amountIn) > 0 &&
-      currentNetwork
-    );
+    return swapData.to && swapData.amountIn && currentNetwork;
   }, [currentNetwork, swapData.amountIn, swapData.to]);
 
   const amountOutValue = useMemo(() => {
@@ -161,13 +163,26 @@ const SwapScreen = () => {
   const handleSwapPress = async () => {
     if (
       !currentNetwork ||
-      !swapData.amountIn ||
       (!swapData.to?.contractAddress && !swapData.from?.contractAddress)
     )
       return;
+    if (Number.isNaN(amountInNumber)) {
+      showToast({
+        title: "Invalid amount",
+        type: "failedToast",
+      });
+      return;
+    }
+    if (amountInNumber <= 0) {
+      showToast({
+        title: "Amount must be greater than 0",
+        type: "failedToast",
+      });
+      return;
+    }
     await swap({
       networkId: currentNetwork?.id,
-      amount: Number(swapData.amountIn),
+      amount: amountInNumber,
       tokenOut: swapData.to?.contractAddress,
       tokenIn: swapData.from?.contractAddress,
       baseFee: Number(suggestedGas.baseFee),
@@ -213,7 +228,7 @@ const SwapScreen = () => {
               selectedToken={swapData.from}
               value={swapData.amountIn}
               onValueChange={(value) => {
-                setSwapData({ ...swapData, amountIn: value.replace(",", ".") });
+                setSwapData({ ...swapData, amountIn: value });
               }}
             />
             <SwapInput

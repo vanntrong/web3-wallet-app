@@ -10,6 +10,7 @@ import useGetTokenBalance from "@/modules/token/services/useGetTokenBalance";
 import { TMainToken, TToken } from "@/modules/token/types";
 import { useNetworkStore } from "@/stores/globalStore";
 import { formatNumber } from "@/utils/converter";
+import { validateInputNumber } from "@/utils/validator";
 
 interface Props {
   label: string;
@@ -64,11 +65,12 @@ const SwapInput = ({
           wrapperStyle={styles.inputWrapper}
           containerStyle={styles.inputContainerStyle}
           style={styles.inputField}
-          inputMode="decimal"
+          keyboardType="decimal-pad"
           readonly={readonly}
           value={value}
           onChangeText={onValueChange}
           returnKeyType="done"
+          returnKeyLabel="done"
         />
         <Button
           variant="outline"
