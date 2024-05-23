@@ -112,11 +112,12 @@ const NumericPad = React.forwardRef<NumericPadRef, NumericPadProps>(
 
     const onButtonPressHandle = (key: string, value: string) => {
       // only 1 dot
-      const isValid = validateInputNumber(key, value, {
+      const isValid = validateInputNumber(key, input, {
         maxDecimalFraction,
         maxNumLength: numLength,
       });
       if (isValid) {
+        console.log("isValid", key, value);
         setInput(input + "" + value);
       }
     };

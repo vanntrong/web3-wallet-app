@@ -22,6 +22,7 @@ import useBiometric from "@/hooks/useBiometric";
 import { useGetMe } from "@/modules/user/services/useGetMe";
 import { useAuthStore, useNetworkStore } from "@/stores/globalStore";
 import { getLocalStore, setLocalStore } from "@/stores/localStore";
+import { resetRouter } from "@/utils/router";
 import { showToast } from "@/utils/toast";
 
 const LoginScreen = () => {
@@ -53,7 +54,6 @@ const LoginScreen = () => {
 
   const { mutate: login, isPending } = useLogin({
     onSuccess(data, variables, context) {
-      console.log("access_token", data.data);
       const {
         tokens: { access_token },
       } = data.data.data;
@@ -173,7 +173,7 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (user) {
-      router.push("/wallet/");
+      resetRouter(router, "/wallet/");
     }
   }, [user, router]);
 

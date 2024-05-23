@@ -12,8 +12,10 @@ export const validateInputNumber = (
   if (
     (key === "dot" && input.length < 1) ||
     (key === "dot" && input.includes("."))
-  )
+  ) {
     return false;
+  }
+
   if (
     maxDecimalFraction &&
     input.includes(".") &&
