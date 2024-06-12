@@ -21,6 +21,7 @@ const SelectToAddressScreen = () => {
   const {
     control,
     formState: { errors },
+    trigger,
     watch,
     setValue,
   } = useFormContext<TSendTokenSchema>();
@@ -50,6 +51,7 @@ const SelectToAddressScreen = () => {
       return;
     }
     setValue("to", address);
+    trigger("to");
   };
   return (
     <>

@@ -2,10 +2,7 @@ import React from "react";
 
 import { useSocketStore } from "@/stores/socketStore";
 
-const useSocketListener = <T extends any>(
-  event: string,
-  callback: (data: T) => void
-) => {
+const useSocketListener = <T>(event: string, callback: (data: T) => void) => {
   const { socket } = useSocketStore();
 
   React.useEffect(() => {

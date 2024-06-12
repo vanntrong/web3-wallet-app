@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { Text, TouchableOpacity, View } from "react-native-ui-lib";
@@ -18,14 +18,16 @@ import { useCreateWalletContext } from "@/contexts/CreateWalletContext";
 import useBiometric from "@/hooks/useBiometric";
 import AuthLayout from "@/layouts/AuthLayout";
 import { TCreateWalletSchema } from "@/modules/auth/validations/createWallet";
-import { useAuthStore } from "@/stores/globalStore";
+import { useGetMe } from "@/modules/user/services/useGetMe";
+import { useAuthStore, useNetworkStore } from "@/stores/globalStore";
 import { axiosInstance } from "@/utils/axios";
 import { checkPasswordStrong } from "@/utils/helper";
 
 export default function CreateAWalletScreen() {
   const router = useRouter();
   const { setMnemonic } = useCreateWalletContext();
-  const { setAccessToken } = useAuthStore();
+  const { setAccessToken, accessToken, user, setUser } = useAuthStore();
+  const { setNetworks, setCurrentNetwork } = useNetworkStore();
   const { biometryType, generatePublickey } = useBiometric();
   const { mutate, isPending } = useSignUp({
     onSuccess(response) {
@@ -35,6 +37,9 @@ export default function CreateAWalletScreen() {
       setMnemonic(data.mnemonic);
       router.push("/secure-your-wallet");
     },
+  });
+  const { data: getMeResponse } = useGetMe(accessToken, {
+    enabled: !user && !!accessToken,
   });
 
   const {
@@ -68,6 +73,18 @@ export default function CreateAWalletScreen() {
     () => checkPasswordStrong(passwordValue),
     [passwordValue]
   );
+
+  useEffect(() => {
+    if (!getMeResponse?.data?.data) return;
+    const data = getMeResponse.data.data;
+    setUser({
+      ...data,
+      name: data.name ?? "Anonymous",
+    });
+    setNetworks(data.networks);
+    setCurrentNetwork(data.networks[0] ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getMeResponse]);
 
   return (
     <KeyboardAvoidingView

@@ -26,18 +26,6 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         setMainToken(data.mainToken);
         setOtherTokens(data.otherTokens);
       });
-      // socket.on("createTransactionSuccess", (data: any) => {
-      //   showToast({
-      //     type: "successToast",
-      //     title: `Transaction ${data.id} has been sent`,
-      //   });
-      // });
-      // socket.on("createTransactionFail", (data: any) => {
-      //   showToast({
-      //     type: "failedToast",
-      //     title: `Transaction ${data.id} failed`,
-      //   });
-      // });
       socket.on("swapSuccess", (data: any) => {
         showToast({
           type: "successToast",

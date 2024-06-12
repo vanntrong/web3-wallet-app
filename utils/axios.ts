@@ -23,15 +23,15 @@ axiosInstance.interceptors.response.use(
     const message = error?.response?.data?.message;
     const statusCode =
       error?.response?.status || error?.response?.data?.statusCode;
-    // if (message && statusCode !== 401) {
-    //   showToast({
-    //     type: "failedToast",
-    //     title: message,
-    //     visibilityTime: 1000,
-    //     position: "top",
-    //     topOffset: 100,
-    //   });
-    // }
+    if (message && statusCode === 400) {
+      showToast({
+        type: "failedToast",
+        title: message,
+        visibilityTime: 1000,
+        position: "top",
+        topOffset: 100,
+      });
+    }
 
     return Promise.reject(error);
   }

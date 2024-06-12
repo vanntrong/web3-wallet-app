@@ -24,7 +24,7 @@ export const privateTabs: TabScreenOption[] = [
     name: "swap/index",
     title: "Swap",
     icon: (props) => <AntDesign name="swap" {...props} />,
-    isDisabled: (network) => !network!.networkSwap,
+    isDisabled: (network) => !network?.networkSwap,
   },
   {
     name: "settings",
