@@ -1,7 +1,8 @@
 import * as Clipboard from "expo-clipboard";
-import { ToastAndroid } from "react-native";
+import { Platform, ToastAndroid } from "react-native";
 
 export const copyToClipboard = async (text: string) => {
   await Clipboard.setStringAsync(text);
-  ToastAndroid.show("Copied to clipboard", ToastAndroid.SHORT);
+  if (Platform.OS === "android")
+    ToastAndroid.show("Copied to clipboard", ToastAndroid.SHORT);
 };

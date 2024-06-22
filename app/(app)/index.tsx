@@ -7,17 +7,13 @@ const Screen = () => {
   const { user, accessToken } = useAuthStore();
   const router = useRouter();
 
-  // return <Redirect href="/login" />;
-  // if (!user && !accessToken) return <Redirect href="/(auth)/wallet-setup" />;
-  // if (accessToken) return <Redirect href="/login" />;
   if (!user && !accessToken) {
     router.replace("/wallet-setup");
     return null;
   }
-  console.log({ user });
   if (!user && accessToken) {
     router.replace("/login");
-    return;
+    return null;
   }
   return <Redirect href="/wallet/" />;
 };

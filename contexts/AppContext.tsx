@@ -1,5 +1,5 @@
 import { PriceServiceConnection } from "@pythnetwork/price-service-client";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { AppState } from "react-native";
 
 import { localStoreKey } from "@/configs/localStore";
@@ -9,6 +9,7 @@ import {
   useNetworkStore,
   useTokenStore,
 } from "@/stores/globalStore";
+import { AppStoreProvider } from "@/stores/globalStore/app";
 import { usePriceStore } from "@/stores/globalStore/priceStore";
 import { setLocalStore } from "@/stores/localStore";
 import { axiosInstance } from "@/utils/axios";
@@ -20,12 +21,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     useTokenStore();
   const { user, accessToken } = useAuthStore();
   const { setPrice } = usePriceStore();
-  const { data: getMyTokenResponse, isFetching } = useGetMyToken(
-    currentNetwork?.id,
-    {
-      enabled: !!currentNetwork,
-    }
-  );
+  const {
+    data: getMyTokenResponse,
+    isFetching,
+    refetch: refetchMyTokens,
+    isRefetching: isRefetchingMyToken,
+  } = useGetMyToken(currentNetwork?.id, {
+    enabled: !!currentNetwork,
+  });
 
   const connectionRef = useRef(
     new PriceServiceConnection("https://hermes.pyth.network")
@@ -106,5 +109,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }, [fetchPrices]);
 
-  return children;
+  const values = useMemo(
+    () => ({
+      refetchMyTokens,
+      isRefetchingMyToken,
+    }),
+    [refetchMyTokens, isRefetchingMyToken]
+  );
+
+  return <AppStoreProvider state={values}>{children}</AppStoreProvider>;
 };

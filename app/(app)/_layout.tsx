@@ -7,6 +7,7 @@ import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router/stack";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useMemo, useState } from "react";
+import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import Toast from "@/components/toast";
@@ -45,6 +46,7 @@ export default function Layout() {
   const [authIsReady, setAuthIsReady] = useState(false);
   const { setUser, setAccessToken } = useAuthStore();
   const { setNetworks, setCurrentNetwork } = useNetworkStore();
+  LogBox.ignoreAllLogs(); //Ignore all log notifications
 
   useEffect(() => {
     async function prepare() {
@@ -52,41 +54,13 @@ export default function Layout() {
         const accessToken = await getLocalStore(localStoreKey.ACCESS_TOKEN);
         console.log({ accessToken });
         // deleteLocalStore(localStoreKey.ACCESS_TOKEN);
-        // if (!accessToken) {
-        //   await setLocalStore(
-        //     localStoreKey.ACCESS_TOKEN,
-        //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InNpbTEifQ.eyJpZCI6ImNiYzM3ZDY5LTQ3OGYtNDBhOC05ZjM3LWRiYjRjM2E4ZTAzYiIsImFkZHJlc3MiOiIweEU2YzNlMzNFMWE5OWU0ZjE5OGZENjAzMTU0NjRFYTQ0NmU3MDk4MDUiLCJpYXQiOjE3MTUxNDMyNTksImV4cCI6MjAxNTE0MzI1OX0.ssl3NotzmM6sYy5RnvpumGq-qKc_iwBmb3WxTzDoKD4"
-        //   );
-        //   // no access token -> user is not logged in
-        //   setAuthIsReady(true);
-        //   return;
-        // }
+
         if (!accessToken) {
           setAuthIsReady(true);
           return;
         }
         axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
         setAccessToken(accessToken);
-        // const response = await axiosInstance.get<Response<TUser>>(
-        //   userEndpoint.getMe
-        // );
-
-        // if (!response.data) {
-        //   // have access token but no user -> user access token is invalid
-        //   // -> redirect to login page
-        //   setAuthIsReady(true);
-        //   return;
-        // }
-        // const user = response.data.data;
-
-        // setUser({
-        //   ...user,
-        //   name: user.name ?? "Anonymous",
-        // });
-        // setNetworks(user.networks);
-        // setCurrentNetwork(
-        //   user.currentSelectedNetwork ?? user.networks[0] ?? null
-        // );
 
         await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (e) {

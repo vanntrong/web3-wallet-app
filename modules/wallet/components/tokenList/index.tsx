@@ -1,12 +1,13 @@
 import { Link } from "expo-router";
 import React from "react";
-import { FlatList, TouchableOpacity } from "react-native";
+import { FlatList, RefreshControl, TouchableOpacity } from "react-native";
 
 import Token from "../token";
 import TokensSkeleton from "../token/tokensSkeleton";
 
 import SkeletonPlaceholder from "@/components/skeletonPlaceholder";
 import { TToken } from "@/modules/token/types";
+import { useAppStoreContext } from "@/stores/globalStore/app";
 
 interface Props {
   tokens: TToken[];
@@ -14,9 +15,17 @@ interface Props {
 }
 
 const TokenList = ({ tokens, isLoading }: Props) => {
+  const { refetchMyTokens, isRefetchingMyToken } = useAppStoreContext();
+
   return (
     <SkeletonPlaceholder skeleton={<TokensSkeleton />} isLoading={isLoading}>
       <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetchingMyToken}
+            onRefresh={refetchMyTokens}
+          />
+        }
         data={tokens}
         contentContainerStyle={{ gap: 12 }}
         style={{ marginBottom: 80 }}

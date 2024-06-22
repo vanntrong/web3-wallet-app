@@ -31,6 +31,14 @@ const WalletScreen = () => {
 
   return (
     <>
+      {/* <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetchingMyToken}
+            onRefresh={refetchMyTokens}
+          />
+        }
+      > */}
       <WalletLayout>
         <HeaderInfo onClickNetworkInfo={() => setIsShowNetworkSelector(true)} />
         <View style={styles.mainTokenWrapper}>
@@ -91,18 +99,19 @@ const WalletScreen = () => {
                   <TokenList tokens={otherTokens} isLoading={isLoading} />
                 ),
               },
-              {
-                label: "Collectibles",
-                component: (
-                  <View>
-                    <Text>collectibles</Text>
-                  </View>
-                ),
-              },
+              // {
+              //   label: "Collectibles",
+              //   component: (
+              //     <View>
+              //       <Text>collectibles</Text>
+              //     </View>
+              //   ),
+              // },
             ]}
           />
         </View>
       </WalletLayout>
+      {/* </ScrollView> */}
 
       <NetworkSelectorBottomSheet
         isOpen={isShowNetworkSelector}

@@ -30,6 +30,7 @@ const ReceiveTokenBottomSheet = (props: Props) => {
     },
     [props]
   );
+
   const handleCopy = async () => {
     if (!user) return;
     await copyToClipboard(user?.address);

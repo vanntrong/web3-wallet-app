@@ -1,7 +1,7 @@
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Platform } from "react-native";
 
 import useAddPushNotificationToken from "@/modules/user/services/useAddPushNotificationToken";
@@ -17,7 +17,7 @@ const NotificationContext = ({ children }: { children: React.ReactNode }) => {
   );
 
   const handleRegistrationError = useCallback(function (errorMessage: string) {
-    alert(errorMessage);
+    console.error(errorMessage);
     // throw new Error(errorMessage);
   }, []);
 

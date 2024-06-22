@@ -2,7 +2,7 @@ import { InfiniteData } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import * as immer from "immer";
 import React, { useCallback, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { View } from "react-native-ui-lib";
 
 import { queryClient } from "@/configs/queryClient";
@@ -18,12 +18,13 @@ import { Response } from "@/types/response";
 
 const TransactionScreen = () => {
   const { currentNetwork } = useNetworkStore();
-  const { data, fetchNextPage, hasNextPage } = useGetTransactions(
-    {
-      networkId: currentNetwork?.id || "",
-    },
-    { enabled: !!currentNetwork }
-  );
+  const { data, fetchNextPage, hasNextPage, refetch, isRefetching } =
+    useGetTransactions(
+      {
+        networkId: currentNetwork?.id || "",
+      },
+      { enabled: !!currentNetwork }
+    );
   const [selectedTransaction, setSelectedTransaction] =
     useState<TTransaction | null>(null);
 
@@ -99,6 +100,9 @@ const TransactionScreen = () => {
   return (
     <View style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 32 }}>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
         onEndReachedThreshold={0.8}
         onEndReached={handleEndReached}
         contentContainerStyle={{ gap: 12 }}
