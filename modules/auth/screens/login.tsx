@@ -61,7 +61,11 @@ const LoginScreen = () => {
       setLocalStore(localStoreKey.ACCESS_TOKEN, access_token);
       setIsEnabledGetMe(true);
     },
-    onError(error, variables, context) {
+    onError(error: any, variables, context) {
+      showToast({
+        type: "failedToast",
+        title: error.response?.data?.message,
+      });
       console.log(error.response);
     },
   });

@@ -29,6 +29,7 @@ import GasFeeSelectorBottomSheet from "@/modules/wallet/components/gasFeeSelecto
 import { useNetworkStore, useTokenStore } from "@/stores/globalStore";
 import { formatNumber } from "@/utils/converter";
 import { showToast } from "@/utils/toast";
+import { isStringEmpty } from "@/utils/validator";
 
 const windowHeight = Dimensions.get("window").height - 40;
 const SwapScreen = () => {
@@ -83,7 +84,9 @@ const SwapScreen = () => {
   } = useGetSwapQuote(
     {
       tokenIn: swapData.from?.contractAddress,
-      tokenOut: swapData.to?.contractAddress,
+      tokenOut: isStringEmpty(swapData.to?.contractAddress)
+        ? undefined
+        : swapData.to?.contractAddress,
       amount: amountInNumber,
       networkId: currentNetwork?.id ?? "",
     },
@@ -101,7 +104,7 @@ const SwapScreen = () => {
       networkId: currentNetwork?.id ?? "",
       amount: amountInNumber,
       tokenIn: swapData.from?.contractAddress,
-      tokenOut: swapData.to?.contractAddress ?? "",
+      tokenOut: swapData.to?.contractAddress,
       ...suggestedGas,
     },
     {

@@ -32,10 +32,10 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
           title: `Swap has been successful`,
         });
       });
-      socket.on("swapFail", (data: any) => {
+      socket.on("swapFailed", (data: any) => {
         showToast({
           type: "failedToast",
-          title: data.message,
+          title: `Swap failed ${data.message}`,
         });
       });
     }

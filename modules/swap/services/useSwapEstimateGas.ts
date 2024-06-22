@@ -8,7 +8,7 @@ import { axiosInstance } from "@/utils/axios";
 
 export type useSwapEstimateGasQuery = {
   tokenIn?: string;
-  tokenOut: string;
+  tokenOut?: string;
   networkId: string;
   amount: number;
   tokenAddress?: string;

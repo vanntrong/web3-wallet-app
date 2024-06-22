@@ -23,7 +23,7 @@ const WalletScreen = () => {
     useState<boolean>(false);
   const [isShowReceiveSheet, setIsShowReceiveSheet] = useState(false);
   const { otherTokens, isLoading } = useTokenStore();
-  const { mutate: updateMe } = useUpdateMe();
+  const { mutate: updateMe } = useUpdateMe({ onError() {} });
 
   const handleSwitchNetwork = (networkId: string) => {
     updateMe({ selectedNetworkId: networkId });

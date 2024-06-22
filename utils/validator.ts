@@ -30,3 +30,8 @@ export const validateInputNumber = (
 export const isValidNumber = (value: string) => {
   return !Number.isNaN(Number(value));
 };
+
+export const isStringEmpty = (value?: string) => {
+  if (!value) return true;
+  return value.length > 0;
+};
