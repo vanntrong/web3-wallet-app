@@ -33,5 +33,5 @@ export const isValidNumber = (value: string) => {
 
 export const isStringEmpty = (value?: string) => {
   if (!value) return true;
-  return value.length > 0;
+  return value.length === 0;
 };
