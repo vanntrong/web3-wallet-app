@@ -36,12 +36,13 @@ const useSuggestedGas = (networkId?: string) => {
   }, [suggestedGasResponse]);
 
   useEffect(() => {
+    if (isGetSuggestedGasFetching) return;
     const timer = setInterval(() => {
       refetch();
     }, 15000);
 
     return () => clearInterval(timer);
-  }, [refetch]);
+  }, [refetch, isGetSuggestedGasFetching]);
 
   return {
     suggestedGas,

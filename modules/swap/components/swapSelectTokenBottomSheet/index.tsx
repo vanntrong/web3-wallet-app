@@ -47,6 +47,10 @@ const SwapSelectTokenBottomSheet = ({
     return swapData.from?.contractAddress || swapData.from?.symbol || "";
   }, [swapData.from]);
 
+  const toSelectedToken = useMemo(() => {
+    return swapData.to?.contractAddress || swapData.to?.symbol || "";
+  }, [swapData.to]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (tabRef.current) {
@@ -94,7 +98,7 @@ const SwapSelectTokenBottomSheet = ({
               component: (
                 <SearchToken
                   tokens={tokens}
-                  selectedTokens={[swapData.to?.contractAddress || ""]}
+                  selectedTokens={[toSelectedToken]}
                   setSelectedToken={(addressOrSymbol) =>
                     onSelectToken(addressOrSymbol, type)
                   }

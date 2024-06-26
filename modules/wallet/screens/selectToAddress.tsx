@@ -73,12 +73,12 @@ const SelectToAddressScreen = () => {
           )}
         />
 
-        <Text style={[styles.title, styles.recent]}>Recent</Text>
+        {/* <Text style={[styles.title, styles.recent]}>Recent</Text>
         <View style={styles.recentList}>
           <RecentCard />
           <RecentCard />
           <RecentCard />
-        </View>
+        </View> */}
         <View style={styles.buttonWrapper}>
           <Button
             disabled={!!errors.to?.message || toValue.length === 0}

@@ -1,5 +1,5 @@
 import { Entypo } from "@expo/vector-icons";
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import { Avatar, Text, TouchableOpacity, View } from "react-native-ui-lib";
 
@@ -8,8 +8,9 @@ import Input from "@/components/input";
 import { COLORS } from "@/configs/colors";
 import useGetTokenBalance from "@/modules/token/services/useGetTokenBalance";
 import { TMainToken, TToken } from "@/modules/token/types";
-import { useNetworkStore } from "@/stores/globalStore";
-import { formatNumber } from "@/utils/converter";
+import { useNetworkStore, usePriceStore } from "@/stores/globalStore";
+import { formatNumber, formatPrice } from "@/utils/converter";
+import { calculateBalance } from "@/utils/helper";
 import { validateInputNumber } from "@/utils/validator";
 
 interface Props {
@@ -42,12 +43,19 @@ const SwapInput = ({
       enabled: !!selectedToken && !!currentNetwork?.id,
     }
   );
+  const { prices } = usePriceStore();
   const handleUseMax = () => {
     if (!selectedToken) return;
     const balance = data?.data;
     if (!balance) return;
     onValueChange?.(balance.toString());
   };
+
+  const amountInValue = useMemo(() => {
+    if (!selectedToken) return 0;
+    const price = prices[selectedToken.priceFeedId || ""];
+    return calculateBalance(Number(value) ?? 0, price);
+  }, [selectedToken, value]);
 
   return (
     <View style={styles.container}>
@@ -93,7 +101,9 @@ const SwapInput = ({
         </Button>
       </View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text style={{ color: COLORS.gray12 }}>$0.00</Text>
+        <Text style={{ color: COLORS.gray12 }}>
+          {formatPrice(amountInValue)}
+        </Text>
         {selectedToken && (
           <Text style={{ color: COLORS.gray12 }}>
             {formatNumber(data?.data)} {selectedToken?.symbol}

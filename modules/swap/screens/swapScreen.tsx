@@ -282,7 +282,6 @@ const SwapScreen = () => {
                   </TouchableOpacity>
                 </View>
               }
-              // value={`${formatNumber(data?.data, 6)} ${mainToken?.symbol}`}
               value={
                 <SkeletonPlaceholder
                   skeleton={

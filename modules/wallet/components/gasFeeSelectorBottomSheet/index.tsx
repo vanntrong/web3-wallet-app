@@ -23,7 +23,7 @@ interface Props {
 
 const GasFeeSelectorBottomSheet = (props: Props) => {
   const { data, setSuggestedGas, onClose } = props;
-  const snapPoints = useMemo(() => ["60%", "60%"], []);
+  const snapPoints = useMemo(() => ["80%", "80%"], []);
   const [selectedKey, setSelectedKey] = useState<TSuggestedGasType>("medium");
 
   const handleChange = useCallback(
@@ -90,19 +90,20 @@ const GasFeeSelectorBottomSheet = (props: Props) => {
                 />
               ),
             },
-            {
-              label: "Advance",
-              component: (
-                <AdvanceGasSelector
-                  defaultValue={{
-                    baseFee: data?.estimatedBaseFee,
-                    maxPriorityFeePerGas:
-                      data?.[selectedKey]?.suggestedMaxPriorityFeePerGas,
-                  }}
-                  setSuggestedGas={handleAdvanceSet}
-                />
-              ),
-            },
+            // {
+            //   label: "Advance",
+            //   component: (
+            //     <AdvanceGasSelector
+            //       defaultValue={{
+            //         baseFee: data?.estimatedBaseFee,
+            //         maxPriorityFeePerGas:
+            //           data?.[selectedKey]?.suggestedMaxPriorityFeePerGas,
+            //       }}
+            //       setSuggestedGas={handleAdvanceSet}
+            //       onInputFocus={() => {}}
+            //     />
+            //   ),
+            // },
           ]}
         />
       </View>
